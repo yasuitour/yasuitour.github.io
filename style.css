@@ -94,13 +94,3 @@ footer {
 }
 
 /* Media Query (Mobile) */
-
-/* Target elemen Elfsight app container secara global */
-.elfsight-app-0488a804-6d50-4e29-84ed-7f1ea03e9024 {
-  position: fixed !important;
-  bottom: 20px;
-  left: 20px;
-  right: auto;
-  z-index: 9999;
-}
-@
