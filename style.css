@@ -19,6 +19,11 @@ html {
   padding: 20px;
 }
 
+.jumbotron {
+  padding-top: 6rem;
+  background-color: hsl(165, 34%, 86%);
+}
+
 img {
   max-width: 50%;
   height: auto;
