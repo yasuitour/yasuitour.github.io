@@ -200,35 +200,6 @@
 <br>
   <br>
 <div id="yoyaku">
-<!-- Form Reservasi ヤスイツアー -->
-<div class="yasui-reservasi-container">
-  <form action="https://api.web3forms.com/submit" method="POST" class="yasui-reservasi-form">
-    <h2>予約フォーム</h2>
-
-    <input type="hidden" name="access_key" value="3ce67fc7-dd7f-4010-82b6-5d2f558933c9">
-    <input type="hidden" name="subject" value="Reservasi Baru dari ヤスイツアー Website">
-    <input type="checkbox" name="botcheck" class="hidden" style="display:none">
-
-    <label for="name">お名前</label>
-    <input type="text" id="name" name="name" placeholder="例：タナカ" required>
-
-    <label for="email">メールアドレス</label>
-    <input type="email" id="email" name="email" placeholder="例：example@mail.com" required>
-
-    <label for="date">ご希望の日付</label>
-    <input type="date" id="date" name="date" required>
-
-    <label for="people">人数</label>
-    <input type="number" id="people" name="people" min="1" placeholder="例：2" required>
-
-    <label for="message">メッセージ</label>
-    <textarea id="message" name="message" placeholder="ツアーの詳細やリクエストなど..." required></textarea>
-
-    <button type="submit">予約を送信する</button>
-
-    <p id="result"></p>
-  </form>
-</div>
 
 <style>
 /* Form Reservasi ヤスイツアー */
@@ -297,6 +268,87 @@
   color: #2c3e50;
 }
 </style>
+
+<!-- Form Reservasi ヤスイツアー -->
+<div class="yasui-reservasi-container">
+  <form action="https://api.web3forms.com/submit" method="POST" class="yasui-reservasi-form">
+    <h2>予約フォーム</h2>
+
+    <input type="hidden" name="access_key" value="3ce67fc7-dd7f-4010-82b6-5d2f558933c9">
+    <input type="hidden" name="subject" value="Reservasi Baru dari ヤスイツアー Website">
+    <input type="checkbox" name="botcheck" class="hidden" style="display:none">
+
+    <label for="name">お名前</label>
+    <input type="text" id="name" name="name" placeholder="例：タナカ" required>
+
+    <label for="email">メールアドレス</label>
+    <input type="email" id="email" name="email" placeholder="例：example@mail.com" required>
+
+    <label for="date">ご希望の日付</label>
+    <input type="date" id="date" name="date" required>
+
+    <label for="people">人数</label>
+    <input type="number" id="people" name="people" min="1" placeholder="例：2" required>
+
+    <!-- Bagian jumlah pria dan wanita (disembunyikan dulu) -->
+    <div id="gender-section" style="display:none; margin-top:10px; border:1px solid #ccc; padding:10px; border-radius:8px;">
+      <legend>男女の人数</legend>
+
+      <div style="display:flex; gap:10px; align-items:center; margin-top:5px;">
+        <label for="male_count">男性：</label>
+        <input type="number" id="male_count" name="male_count" min="0" value="0" style="width:60px;">
+      </div>
+
+      <div style="display:flex; gap:10px; align-items:center; margin-top:5px;">
+        <label for="female_count">女性：</label>
+        <input type="number" id="female_count" name="female_count" min="0" value="0" style="width:60px;">
+      </div>
+
+      <p id="gender_total" style="margin-top:8px; font-weight:bold;"></p>
+    </div>
+
+    <label for="message">メッセージ</label>
+    <textarea id="message" name="message" placeholder="ツアーの詳細やリクエストなど..." required></textarea>
+
+    <button type="submit">予約を送信する</button>
+
+    <p id="result"></p>
+  </form>
+</div>
+
+<script>
+  const peopleInput = document.getElementById("people");
+  const genderSection = document.getElementById("gender-section");
+  const maleInput = document.getElementById("male_count");
+  const femaleInput = document.getElementById("female_count");
+  const genderTotal = document.getElementById("gender_total");
+
+  // Saat jumlah orang diklik atau diisi, tampilkan bagian pria & wanita
+  peopleInput.addEventListener("input", () => {
+    if (peopleInput.value > 0) {
+      genderSection.style.display = "block";
+    } else {
+      genderSection.style.display = "none";
+      maleInput.value = 0;
+      femaleInput.value = 0;
+      genderTotal.textContent = "";
+    }
+  });
+
+  // Update total otomatis
+  function updateTotal() {
+    const total = Number(maleInput.value) + Number(femaleInput.value);
+    genderTotal.textContent = total
+      ? `合計人数：${total}人`
+      : "";
+  }
+
+  maleInput.addEventListener("input", updateTotal);
+  femaleInput.addEventListener("input", updateTotal);
+</script>
+
+
+    
 
 <script>
 const form = document.querySelector(".yasui-reservasi-form");
