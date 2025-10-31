@@ -1,16 +1,17 @@
-// chatbot.js — Yasui Tour Chatbot Popup (versi dengan background kuning lembut)
+// chatbot.js — Yasui Tour Chatbot Popup
 document.addEventListener("DOMContentLoaded", () => {
-  // ====== 1️⃣ Sisipkan CSS ======
+  // ====== 1️⃣ Tambahkan CSS ======
   const style = document.createElement("style");
   style.textContent = `
     :root {
       --primary: #00bfa6;
-      --bot-bg: #fff8dc;      /* bot: kuning muda */
-      --user-bg: #f0fff0;     /* user: hijau lembut */
-      --bg-main: #fffbea;     /* background utama chat */
-      --date-bg: #fff5cc;     /* tanggal: kuning lembut */
+      --bot-bg: rgba(0, 191, 166, 0.15);
+      --user-bg: rgba(191, 240, 226, 0.3);
+      --chat-bg: rgba(0, 0, 0, 0.75);
+      --text-color: #fff;
     }
 
+    /* Tombol Chat */
     .chat-toggle {
       position: fixed;
       bottom: 20px;
@@ -21,30 +22,40 @@ document.addEventListener("DOMContentLoaded", () => {
       width: 60px;
       height: 60px;
       border-radius: 50%;
-      font-size: 26px;
+      font-size: 28px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
       z-index: 1001;
+      animation: bubble 2.5s infinite ease-in-out;
     }
-    .chat-toggle:hover { transform: scale(1.1); }
 
+    /* Animasi Gelembung Chat */
+    @keyframes bubble {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-6px) scale(1.08); }
+    }
+
+    .chat-toggle:hover { transform: scale(1.15); transition: 0.2s; }
+
+    /* Popup */
     .chat-popup {
       position: fixed;
       bottom: 90px;
       right: 20px;
       width: 340px;
-      max-height: 500px;
+      max-height: 520px;
       display: none;
       flex-direction: column;
-      background: var(--bg-main);
+      background: var(--chat-bg);
+      color: var(--text-color);
       border-radius: 16px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
       overflow: hidden;
       z-index: 1000;
       opacity: 0;
       transform: translateY(30px);
       transition: all 0.4s ease;
+      backdrop-filter: blur(12px);
     }
 
     .chat-popup.show {
@@ -60,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
       padding: 10px;
       font-weight: bold;
       position: relative;
+      font-size: 15px;
     }
     .chat-header button {
       position: absolute;
@@ -76,7 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
       flex: 1;
       padding: 12px;
       overflow-y: auto;
-      background: var(--bg-main);
     }
 
     .msg {
@@ -93,8 +104,19 @@ document.addEventListener("DOMContentLoaded", () => {
       animation: fadeSlideIn 0.4s ease forwards;
     }
 
-    .bot { background: var(--bot-bg); align-self: flex-start; border-bottom-left-radius: 4px; }
-    .user { background: var(--user-bg); align-self: flex-end; border-bottom-right-radius: 4px; }
+    .bot {
+      background: var(--bot-bg);
+      color: var(--text-color);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    .user {
+      background: var(--user-bg);
+      color: var(--text-color);
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
 
     @keyframes fadeSlideIn {
       0% {opacity: 0; transform: translateY(15px);}
@@ -104,9 +126,9 @@ document.addEventListener("DOMContentLoaded", () => {
     .date-label {
       text-align: center;
       font-size: 11px;
-      color: #666;
+      color: #ddd;
       margin: 10px 0;
-      background: var(--date-bg);
+      background: rgba(255,255,255,0.1);
       padding: 4px 0;
       border-radius: 8px;
       opacity: 0;
@@ -117,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .timestamp {
       display: block;
       font-size: 10px;
-      color: #888;
+      color: #bbb;
       margin-top: 3px;
       text-align: right;
     }
@@ -127,19 +149,19 @@ document.addEventListener("DOMContentLoaded", () => {
       flex-wrap: wrap;
       gap: 6px;
       padding: 6px 10px;
-      background: #fffdf4;
-      border-top: 1px solid #eee;
+      background: rgba(255,255,255,0.08);
+      border-top: 1px solid rgba(255,255,255,0.15);
     }
 
     .quick-btn {
-      background: #fff8e1;
-      border: 1px solid #ffeab6;
-      color: var(--primary);
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: var(--text-color);
       border-radius: 999px;
       padding: 4px 10px;
       font-size: 12px;
       cursor: pointer;
-      transition: 0.2s;
+      transition: 0.3s;
     }
     .quick-btn:hover {
       background: var(--primary);
@@ -149,17 +171,21 @@ document.addEventListener("DOMContentLoaded", () => {
     .chat-input {
       display: flex;
       padding: 8px;
-      border-top: 1px solid #eee;
-      background: #fffaf0;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      background: rgba(0,0,0,0.3);
     }
 
     .chat-input input {
       flex: 1;
       padding: 8px;
-      border: 1px solid #ddd;
+      border: 1px solid rgba(255,255,255,0.3);
       border-radius: 18px;
       font-size: 13px;
+      background: rgba(255,255,255,0.1);
+      color: white;
     }
+
+    .chat-input input::placeholder { color: #aaa; }
 
     .chat-input button {
       background: var(--primary);
@@ -178,7 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
       padding: 10px;
       font-weight: bold;
       cursor: pointer;
-      border-top: 1px solid #eee;
+      border-top: 1px solid rgba(255,255,255,0.1);
     }
     .line-btn:hover { background: #05b14d; }
 
@@ -189,16 +215,19 @@ document.addEventListener("DOMContentLoaded", () => {
       padding: 8px;
       font-weight: bold;
       cursor: pointer;
-      border-top: 1px solid #eee;
+      border-top: 1px solid rgba(255,255,255,0.1);
     }
     .clear-btn:hover { background: #ff4040; }
 
     .chat-box::-webkit-scrollbar { width: 6px; }
-    .chat-box::-webkit-scrollbar-thumb { background: #f9e89d; border-radius: 3px; }
+    .chat-box::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.3);
+      border-radius: 3px;
+    }
   `;
   document.head.appendChild(style);
 
-  // ====== 2️⃣ Sisipkan HTML ======
+  // ====== 2️⃣ Tambahkan HTML ======
   const chatHTML = `
     <button class="chat-toggle" id="chatToggle">💬</button>
     <div class="chat-popup" id="chatPopup">
@@ -219,7 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.body.insertAdjacentHTML("beforeend", chatHTML);
 
-  // ====== 3️⃣ JavaScript logic ======
+  // ====== 3️⃣ Logika Chat ======
   const chatToggle = document.getElementById("chatToggle");
   const chatPopup = document.getElementById("chatPopup");
   const closeChat = document.getElementById("closeChat");
