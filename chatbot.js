@@ -228,6 +228,23 @@ document.addEventListener("DOMContentLoaded", () => {
       background: rgba(255,255,255,0.3);
       border-radius: 3px;
     }
+
+/* 🌿 Efek glow dan getar lembut untuk pesan bot */
+    @keyframes botShake {
+      0%, 100% { transform: translate(0, 0); box-shadow: 0 0 6px rgba(0,255,180,0.3); }
+      20% { transform: translate(1px, -1px); box-shadow: 0 0 10px rgba(0,255,180,0.4); }
+      40% { transform: translate(-1px, 1px); box-shadow: 0 0 12px rgba(0,255,180,0.6); }
+      60% { transform: translate(1px, 1px); box-shadow: 0 0 10px rgba(0,255,180,0.4); }
+      80% { transform: translate(-1px, -1px); box-shadow: 0 0 8px rgba(0,255,180,0.3); }
+    }
+
+    .bot.shake-glow {
+      animation: botShake 0.5s ease;
+      box-shadow: 0 0 10px rgba(0,255,180,0.5);
+      border: 1px solid rgba(0,255,180,0.3);
+    }
+
+    
   `;
   document.head.appendChild(style);
 
@@ -333,19 +350,31 @@ document.addEventListener("DOMContentLoaded", () => {
     if (save) saveChat();
   }
 
-  function botResponse(userText) {
+function botResponse(userText) {
     let foundKey = "default";
     for (const key in RESPONSES) {
       if (userText.includes(key)) { foundKey = key; break; }
     }
+
     setTimeout(() => {
       addMessage(RESPONSES[foundKey], "bot");
       botPop.currentTime = 0;
       botPop.play();
+
+      // 💬 Getar lembut (HP)
       if (navigator.vibrate) navigator.vibrate([40, 30, 40]);
+
+      // 🌿 Tambahkan animasi shake + glow pada pesan bot terakhir
+      const botMsgs = chatBox.querySelectorAll(".msg.bot");
+      const lastBot = botMsgs[botMsgs.length - 1];
+      if (lastBot) {
+        lastBot.classList.add("shake-glow");
+        setTimeout(() => lastBot.classList.remove("shake-glow"), 600);
+      }
     }, 500);
   }
 
+  
   function sendMessage() {
   const text = userInput.value.trim();
   if (!text) return;
