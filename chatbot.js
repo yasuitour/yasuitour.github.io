@@ -387,4 +387,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadChat();
   loadQuickReplies();
+
+
+  // === Fungsi untuk membuka chatbot dari luar ===
+  window.openYasuiChat = function() {
+    const chatPopup = document.getElementById("chatPopup");
+    if (chatPopup) {
+      chatPopup.classList.add("show");
+      const chatAppear = document.getElementById("chatAppearSound");
+      if (chatAppear) chatAppear.play();
+      if (navigator.vibrate) navigator.vibrate(50);
+    }
+  };
+  
 });
