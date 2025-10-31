@@ -399,5 +399,25 @@ document.addEventListener("DOMContentLoaded", () => {
       if (navigator.vibrate) navigator.vibrate(50);
     }
   };
-  
+
+// === Efek suara & animasi saat gelembung chat diklik ===
+  const bubbleClickSound = new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg");
+  bubbleClickSound.volume = 0.4;
+
+  chatBox.addEventListener("click", (e) => {
+    const msg = e.target.closest(".msg");
+    if (msg) {
+      // Mainkan suara
+      bubbleClickSound.currentTime = 0;
+      bubbleClickSound.play();
+
+      // Tambahkan animasi singkat
+      msg.style.transition = "transform 0.2s ease";
+      msg.style.transform = "scale(1.05)";
+      setTimeout(() => {
+        msg.style.transform = "scale(1)";
+      }, 200);
+    }
+  });
+        
 });
