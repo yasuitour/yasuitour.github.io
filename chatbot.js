@@ -1,6 +1,7 @@
 // chatbot.js — Yasui Tour Chatbot Popup
 document.addEventListener("DOMContentLoaded", () => {
-  // ====== 1️⃣ Tambahkan CSS ======
+
+  // ====== Tambahkan CSS ======
   const style = document.createElement("style");
   style.textContent = `
     :root {
@@ -26,7 +27,16 @@ document.addEventListener("DOMContentLoaded", () => {
       cursor: pointer;
       box-shadow: 0 4px 15px rgba(0,0,0,0.4);
       z-index: 1001;
-      animation: bubble 2.5s infinite ease-in-out;
+      opacity: 0;
+      transform: scale(0.5);
+      animation: fadeBounceIn 1s ease forwards, bubble 2.5s infinite ease-in-out 2s;
+    }
+
+    /* Animasi Muncul + Getar */
+    @keyframes fadeBounceIn {
+      0% { opacity: 0; transform: scale(0.5) translateY(40px); }
+      60% { opacity: 1; transform: scale(1.1) translateY(-10px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
     }
 
     /* Animasi Gelembung Chat */
@@ -104,19 +114,8 @@ document.addEventListener("DOMContentLoaded", () => {
       animation: fadeSlideIn 0.4s ease forwards;
     }
 
-    .bot {
-      background: var(--bot-bg);
-      color: var(--text-color);
-      align-self: flex-start;
-      border-bottom-left-radius: 4px;
-    }
-
-    .user {
-      background: var(--user-bg);
-      color: var(--text-color);
-      align-self: flex-end;
-      border-bottom-right-radius: 4px;
-    }
+    .bot { background: var(--bot-bg); color: var(--text-color); align-self: flex-start; border-bottom-left-radius: 4px; }
+    .user { background: var(--user-bg); color: var(--text-color); align-self: flex-end; border-bottom-right-radius: 4px; }
 
     @keyframes fadeSlideIn {
       0% {opacity: 0; transform: translateY(15px);}
@@ -227,7 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.head.appendChild(style);
 
-  // ====== 2️⃣ Tambahkan HTML ======
+  // ====== Tambahkan HTML ======
   const chatHTML = `
     <button class="chat-toggle" id="chatToggle">💬</button>
     <div class="chat-popup" id="chatPopup">
@@ -245,10 +244,11 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
     <audio id="botPopSound" src="https://actions.google.com/sounds/v1/cartoon/pop.ogg" preload="auto"></audio>
     <audio id="userSendSound" src="https://actions.google.com/sounds/v1/cartoon/slide_whistle_to_drum_hit.ogg" preload="auto"></audio>
+    <audio id="chatAppearSound" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg" preload="auto"></audio>
   `;
   document.body.insertAdjacentHTML("beforeend", chatHTML);
 
-  // ====== 3️⃣ Logika Chat ======
+  // ====== Logika Chat ======
   const chatToggle = document.getElementById("chatToggle");
   const chatPopup = document.getElementById("chatPopup");
   const closeChat = document.getElementById("closeChat");
@@ -259,9 +259,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const botPop = document.getElementById("botPopSound");
   const userSound = document.getElementById("userSendSound");
   const clearBtn = document.getElementById("clearHistory");
+  const chatAppear = document.getElementById("chatAppearSound");
 
   botPop.volume = 0.3;
   userSound.volume = 0.4;
+  chatAppear.volume = 0.4;
+
+  // 🔊 Mainkan suara + getar saat tombol chat muncul
+  setTimeout(() => {
+    chatAppear.play();
+    if (navigator.vibrate) navigator.vibrate([80, 50, 80]);
+  }, 800);
 
   const QUICK_OPTIONS = [
     "カーチャーターについて","ツアーパッケージについて","アクティビティについて",
