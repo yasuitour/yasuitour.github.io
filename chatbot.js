@@ -1,12 +1,14 @@
-// chatbot.js — Yasui Tour Chatbot Popup
+// chatbot.js — Yasui Tour Chatbot Popup (versi dengan background kuning lembut)
 document.addEventListener("DOMContentLoaded", () => {
   // ====== 1️⃣ Sisipkan CSS ======
   const style = document.createElement("style");
   style.textContent = `
     :root {
       --primary: #00bfa6;
-      --bot-bg: #e6f9f6;
-      --user-bg: #bff0e2;
+      --bot-bg: #fff8dc;      /* bot: kuning muda */
+      --user-bg: #f0fff0;     /* user: hijau lembut */
+      --bg-main: #fffbea;     /* background utama chat */
+      --date-bg: #fff5cc;     /* tanggal: kuning lembut */
     }
 
     .chat-toggle {
@@ -35,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
       max-height: 500px;
       display: none;
       flex-direction: column;
-      background: white;
+      background: var(--bg-main);
       border-radius: 16px;
       box-shadow: 0 6px 18px rgba(0,0,0,0.25);
       overflow: hidden;
@@ -74,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
       flex: 1;
       padding: 12px;
       overflow-y: auto;
-      background: #f7fdfc;
+      background: var(--bg-main);
     }
 
     .msg {
@@ -104,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
       font-size: 11px;
       color: #666;
       margin: 10px 0;
-      background: #eefaf7;
+      background: var(--date-bg);
       padding: 4px 0;
       border-radius: 8px;
       opacity: 0;
@@ -125,13 +127,13 @@ document.addEventListener("DOMContentLoaded", () => {
       flex-wrap: wrap;
       gap: 6px;
       padding: 6px 10px;
-      background: #fff;
+      background: #fffdf4;
       border-top: 1px solid #eee;
     }
 
     .quick-btn {
-      background: #f0fdfb;
-      border: 1px solid #d3f3eb;
+      background: #fff8e1;
+      border: 1px solid #ffeab6;
       color: var(--primary);
       border-radius: 999px;
       padding: 4px 10px;
@@ -148,6 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
       display: flex;
       padding: 8px;
       border-top: 1px solid #eee;
+      background: #fffaf0;
     }
 
     .chat-input input {
@@ -191,7 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .clear-btn:hover { background: #ff4040; }
 
     .chat-box::-webkit-scrollbar { width: 6px; }
-    .chat-box::-webkit-scrollbar-thumb { background: #cdebe6; border-radius: 3px; }
+    .chat-box::-webkit-scrollbar-thumb { background: #f9e89d; border-radius: 3px; }
   `;
   document.head.appendChild(style);
 
