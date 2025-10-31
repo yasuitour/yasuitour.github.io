@@ -244,6 +244,25 @@ document.addEventListener("DOMContentLoaded", () => {
       border: 1px solid rgba(0,255,180,0.3);
     }
 
+/* ✨ Animasi lembut muncul untuk pesan user */
+@keyframes userFadePop {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.05) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.user.fade-pop {
+  animation: userFadePop 0.35s ease forwards;
+}
     
   `;
   document.head.appendChild(style);
@@ -374,7 +393,6 @@ function botResponse(userText) {
     }, 500);
   }
 
-  
   function sendMessage() {
   const text = userInput.value.trim();
   if (!text) return;
@@ -388,12 +406,23 @@ function botResponse(userText) {
   // 📱 Efek getar ringan di HP
   if (navigator.vibrate) navigator.vibrate(70);
 
+  // 💬 Tambahkan pesan user ke chatbox
   addMessage(text, "user");
+
+  // ✨ Tambahkan animasi fade + scale lembut pada pesan terakhir user
+  const userMsgs = chatBox.querySelectorAll(".msg.user");
+  const lastUser = userMsgs[userMsgs.length - 1];
+  if (lastUser) {
+    lastUser.classList.add("fade-pop");
+    setTimeout(() => lastUser.classList.remove("fade-pop"), 500);
+  }
+
   userSound.currentTime = 0;
   userSound.play();
   userInput.value = "";
   botResponse(text);
 }
+  
 
   sendBtn.onclick = sendMessage;
   userInput.addEventListener("keypress", e => { if (e.key === "Enter") sendMessage(); });
