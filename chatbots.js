@@ -194,6 +194,11 @@ document.addEventListener("DOMContentLoaded", () => {
       border-radius: 18px;
       padding: 8px 12px;
       cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .chat-input button:active {
+      transform: scale(0.9);
     }
 
     .line-btn {
@@ -223,6 +228,23 @@ document.addEventListener("DOMContentLoaded", () => {
       background: rgba(255,255,255,0.3);
       border-radius: 3px;
     }
+
+/* 🌿 Efek glow dan getar lembut untuk pesan bot */
+    @keyframes botShake {
+      0%, 100% { transform: translate(0, 0); box-shadow: 0 0 6px rgba(0,255,180,0.3); }
+      20% { transform: translate(1px, -1px); box-shadow: 0 0 10px rgba(0,255,180,0.4); }
+      40% { transform: translate(-1px, 1px); box-shadow: 0 0 12px rgba(0,255,180,0.6); }
+      60% { transform: translate(1px, 1px); box-shadow: 0 0 10px rgba(0,255,180,0.4); }
+      80% { transform: translate(-1px, -1px); box-shadow: 0 0 8px rgba(0,255,180,0.3); }
+    }
+
+    .bot.shake-glow {
+      animation: botShake 0.5s ease;
+      box-shadow: 0 0 10px rgba(0,255,180,0.5);
+      border: 1px solid rgba(0,255,180,0.3);
+    }
+
+    
   `;
   document.head.appendChild(style);
 
@@ -245,6 +267,7 @@ document.addEventListener("DOMContentLoaded", () => {
     <audio id="botPopSound" src="https://actions.google.com/sounds/v1/cartoon/pop.ogg" preload="auto"></audio>
     <audio id="userSendSound" src="https://actions.google.com/sounds/v1/cartoon/slide_whistle_to_drum_hit.ogg" preload="auto"></audio>
     <audio id="chatAppearSound" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg" preload="auto"></audio>
+    <audio id="sendClickSound" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg" preload="auto"></audio>
   `;
   document.body.insertAdjacentHTML("beforeend", chatHTML);
 
@@ -260,10 +283,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const userSound = document.getElementById("userSendSound");
   const clearBtn = document.getElementById("clearHistory");
   const chatAppear = document.getElementById("chatAppearSound");
+  const sendClick = document.getElementById("sendClickSound");
 
   botPop.volume = 0.3;
   userSound.volume = 0.4;
   chatAppear.volume = 0.4;
+  sendClick.volume = 0.5;
 
   // 🔊 Mainkan suara + getar saat tombol chat muncul
   setTimeout(() => {
@@ -325,28 +350,50 @@ document.addEventListener("DOMContentLoaded", () => {
     if (save) saveChat();
   }
 
-  function botResponse(userText) {
+function botResponse(userText) {
     let foundKey = "default";
     for (const key in RESPONSES) {
       if (userText.includes(key)) { foundKey = key; break; }
     }
+
     setTimeout(() => {
       addMessage(RESPONSES[foundKey], "bot");
       botPop.currentTime = 0;
       botPop.play();
-      if (navigator.vibrate) navigator.vibrate(100);
+
+      // 💬 Getar lembut (HP)
+      if (navigator.vibrate) navigator.vibrate([40, 30, 40]);
+
+      // 🌿 Tambahkan animasi shake + glow pada pesan bot terakhir
+      const botMsgs = chatBox.querySelectorAll(".msg.bot");
+      const lastBot = botMsgs[botMsgs.length - 1];
+      if (lastBot) {
+        lastBot.classList.add("shake-glow");
+        setTimeout(() => lastBot.classList.remove("shake-glow"), 600);
+      }
     }, 500);
   }
 
+  
   function sendMessage() {
-    const text = userInput.value.trim();
-    if (!text) return;
-    addMessage(text, "user");
-    userSound.currentTime = 0;
-    userSound.play();
-    userInput.value = "";
-    botResponse(text);
-  }
+  const text = userInput.value.trim();
+  if (!text) return;
+
+  // 🎵 Efek suara & animasi tombol kirim
+  sendClick.currentTime = 0;
+  sendClick.play();
+  sendBtn.style.transform = "scale(0.9)";
+  setTimeout(() => (sendBtn.style.transform = "scale(1)"), 150);
+
+  // 📱 Efek getar ringan di HP
+  if (navigator.vibrate) navigator.vibrate(70);
+
+  addMessage(text, "user");
+  userSound.currentTime = 0;
+  userSound.play();
+  userInput.value = "";
+  botResponse(text);
+}
 
   sendBtn.onclick = sendMessage;
   userInput.addEventListener("keypress", e => { if (e.key === "Enter") sendMessage(); });
@@ -388,19 +435,10 @@ document.addEventListener("DOMContentLoaded", () => {
   loadChat();
   loadQuickReplies();
 
-
   // === Fungsi untuk membuka chatbot dari luar ===
   window.openYasuiChat = function() {
-    const chatPopup = document.getElementById("chatPopup");
-    if (chatPopup) {
-      chatPopup.classList.add("show");
-      const chatAppear = document.getElementById("chatAppearSound");
-      if (chatAppear) chatAppear.play();
-      if (navigator.vibrate) navigator.vibrate(50);
-    }
+    chatPopup.classList.add("show");
+    chatAppear.play();
+    if (navigator.vibrate) navigator.vibrate(50);
   };
-
-
-  });
-        
 });
