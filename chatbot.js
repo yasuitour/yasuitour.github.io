@@ -342,7 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
       addMessage(RESPONSES[foundKey], "bot");
       botPop.currentTime = 0;
       botPop.play();
-      if (navigator.vibrate) navigator.vibrate(100);
+      if (navigator.vibrate) navigator.vibrate([40, 30, 40]);
     }, 500);
   }
 
