@@ -1,4 +1,4 @@
-<script>
+
 // chatbot.js — Yasui Tour Chatbot Popup + Email Notification (Web3Forms)
 document.addEventListener("DOMContentLoaded", () => {
 
