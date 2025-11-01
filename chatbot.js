@@ -402,8 +402,8 @@ document.addEventListener("DOMContentLoaded", () => {
         from_name: "Yasui Tour Chatbot",
         message: `Pesan baru dari pengunjung:\n\n${userMessage}`
       })
-    });
-    const result = await response.json();
+
+const result = await response.json();
     console.log("Notifikasi email:", result);
   }
 
@@ -411,3 +411,7 @@ document.addEventListener("DOMContentLoaded", () => {
   userInput.addEventListener("keypress", e => { if (e.key === "Enter") sendMessage(); });
 
   chatToggle.onclick = ()
+
+      
+    });
+    
