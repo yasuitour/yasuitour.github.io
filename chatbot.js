@@ -4,7 +4,266 @@ document.addEventListener("DOMContentLoaded", () => {
   // ====== Tambahkan CSS ======
   const style = document.createElement("style");
   style.textContent = `
-    /* ... semua CSS kamu tetap sama, tidak diubah ... */
+    :root {
+      --primary: #00bfa6;
+      --bot-bg: rgba(0, 191, 166, 0.15);
+      --user-bg: rgba(191, 240, 226, 0.3);
+      --chat-bg: rgba(0, 0, 0, 0.75);
+      --text-color: #fff;
+    }
+
+    /* Tombol Chat */
+    .chat-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      font-size: 28px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      z-index: 1001;
+      opacity: 0;
+      transform: scale(0.5);
+      animation: fadeBounceIn 1s ease forwards, bubble 2.5s infinite ease-in-out 2s;
+    }
+
+    /* Animasi Muncul + Getar */
+    @keyframes fadeBounceIn {
+      0% { opacity: 0; transform: scale(0.5) translateY(40px); }
+      60% { opacity: 1; transform: scale(1.1) translateY(-10px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Animasi Gelembung Chat */
+    @keyframes bubble {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-6px) scale(1.08); }
+    }
+
+    .chat-toggle:hover { transform: scale(1.15); transition: 0.2s; }
+
+    /* Popup */
+    .chat-popup {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      width: 340px;
+      max-height: 520px;
+      display: none;
+      flex-direction: column;
+      background: var(--chat-bg);
+      color: var(--text-color);
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+      overflow: hidden;
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.4s ease;
+      backdrop-filter: blur(12px);
+    }
+
+    .chat-popup.show {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .chat-header {
+      background: var(--primary);
+      color: white;
+      text-align: center;
+      padding: 10px;
+      font-weight: bold;
+      position: relative;
+      font-size: 15px;
+    }
+    .chat-header button {
+      position: absolute;
+      right: 10px;
+      top: 6px;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .chat-box {
+      flex: 1;
+      padding: 12px;
+      overflow-y: auto;
+    }
+
+    .msg {
+      padding: 8px 12px;
+      border-radius: 14px;
+      margin: 6px 0;
+      display: inline-block;
+      max-width: 80%;
+      line-height: 1.5;
+      position: relative;
+      word-wrap: break-word;
+      opacity: 0;
+      transform: translateY(15px);
+      animation: fadeSlideIn 0.4s ease forwards;
+    }
+
+    .bot { background: var(--bot-bg); color: var(--text-color); align-self: flex-start; border-bottom-left-radius: 4px; }
+    .user { background: var(--user-bg); color: var(--text-color); align-self: flex-end; border-bottom-right-radius: 4px; }
+
+    @keyframes fadeSlideIn {
+      0% {opacity: 0; transform: translateY(15px);}
+      100% {opacity: 1; transform: translateY(0);}
+    }
+
+    .date-label {
+      text-align: center;
+      font-size: 11px;
+      color: #ddd;
+      margin: 10px 0;
+      background: rgba(255,255,255,0.1);
+      padding: 4px 0;
+      border-radius: 8px;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeSlideIn 0.5s ease forwards;
+    }
+
+    .timestamp {
+      display: block;
+      font-size: 10px;
+      color: #bbb;
+      margin-top: 3px;
+      text-align: right;
+    }
+
+    .quick-replies {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 6px 10px;
+      background: rgba(255,255,255,0.08);
+      border-top: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .quick-btn {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: var(--text-color);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .quick-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 8px;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      background: rgba(0,0,0,0.3);
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 18px;
+      font-size: 13px;
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+
+    .chat-input input::placeholder { color: #aaa; }
+
+    .chat-input button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      margin-left: 6px;
+      border-radius: 18px;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .chat-input button:active {
+      transform: scale(0.9);
+    }
+
+    .line-btn {
+      background: #06c755;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .line-btn:hover { background: #05b14d; }
+
+    .clear-btn {
+      background: #ff6b6b;
+      color: white;
+      text-align: center;
+      padding: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .clear-btn:hover { background: #ff4040; }
+
+    .chat-box::-webkit-scrollbar { width: 6px; }
+    .chat-box::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.3);
+      border-radius: 3px;
+    }
+
+/* 🌿 Efek glow dan getar lembut untuk pesan bot */
+    @keyframes botShake {
+      0%, 100% { transform: translate(0, 0); box-shadow: 0 0 6px rgba(0,255,180,0.3); }
+      20% { transform: translate(1px, -1px); box-shadow: 0 0 10px rgba(0,255,180,0.4); }
+      40% { transform: translate(-1px, 1px); box-shadow: 0 0 12px rgba(0,255,180,0.6); }
+      60% { transform: translate(1px, 1px); box-shadow: 0 0 10px rgba(0,255,180,0.4); }
+      80% { transform: translate(-1px, -1px); box-shadow: 0 0 8px rgba(0,255,180,0.3); }
+    }
+
+    .bot.shake-glow {
+      animation: botShake 0.5s ease;
+      box-shadow: 0 0 10px rgba(0,255,180,0.5);
+      border: 1px solid rgba(0,255,180,0.3);
+    }
+
+/* ✨ Animasi lembut muncul untuk pesan user */
+@keyframes userFadePop {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.05) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.user.fade-pop {
+  animation: userFadePop 0.35s ease forwards;
+}
+    
   `;
   document.head.appendChild(style);
 
@@ -110,7 +369,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (save) saveChat();
   }
 
-  function botResponse(userText) {
+function botResponse(userText) {
     let foundKey = "default";
     for (const key in RESPONSES) {
       if (userText.includes(key)) { foundKey = key; break; }
@@ -120,7 +379,11 @@ document.addEventListener("DOMContentLoaded", () => {
       addMessage(RESPONSES[foundKey], "bot");
       botPop.currentTime = 0;
       botPop.play();
+
+      // 💬 Getar lembut (HP)
       if (navigator.vibrate) navigator.vibrate([40, 30, 40]);
+
+      // 🌿 Tambahkan animasi shake + glow pada pesan bot terakhir
       const botMsgs = chatBox.querySelectorAll(".msg.bot");
       const lastBot = botMsgs[botMsgs.length - 1];
       if (lastBot) {
@@ -130,51 +393,36 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 500);
   }
 
-  // 🌐 Kirim notifikasi email via Web3Forms
-  async function sendEmailNotification(message) {
-    try {
-      await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          access_key: "f353e5ae-1b86-4ea6-a55f-582ad8612812",
-          subject: "📩 Pesan Baru dari Chatbot ヤスイツアー",
-          from_name: "Yasui Tour Chatbot",
-          message: `Pesan baru dari pengunjung:\n\n${message}`
-        })
-      });
-      console.log("📧 Email notifikasi dikirim sukses!");
-    } catch (err) {
-      console.error("Gagal kirim email:", err);
-    }
-  }
-
   function sendMessage() {
-    const text = userInput.value.trim();
-    if (!text) return;
+  const text = userInput.value.trim();
+  if (!text) return;
 
-    sendClick.currentTime = 0;
-    sendClick.play();
-    sendBtn.style.transform = "scale(0.9)";
-    setTimeout(() => (sendBtn.style.transform = "scale(1)"), 150);
-    if (navigator.vibrate) navigator.vibrate(70);
-    addMessage(text, "user");
+  // 🎵 Efek suara & animasi tombol kirim
+  sendClick.currentTime = 0;
+  sendClick.play();
+  sendBtn.style.transform = "scale(0.9)";
+  setTimeout(() => (sendBtn.style.transform = "scale(1)"), 150);
 
-    const userMsgs = chatBox.querySelectorAll(".msg.user");
-    const lastUser = userMsgs[userMsgs.length - 1];
-    if (lastUser) {
-      lastUser.classList.add("fade-pop");
-      setTimeout(() => lastUser.classList.remove("fade-pop"), 500);
-    }
+  // 📱 Efek getar ringan di HP
+  if (navigator.vibrate) navigator.vibrate(70);
 
-    userSound.currentTime = 0;
-    userSound.play();
-    userInput.value = "";
-    botResponse(text);
+  // 💬 Tambahkan pesan user ke chatbox
+  addMessage(text, "user");
 
-    // 🚀 Kirim notifikasi email ke admin
-    sendEmailNotification(text);
+  // ✨ Tambahkan animasi fade + scale lembut pada pesan terakhir user
+  const userMsgs = chatBox.querySelectorAll(".msg.user");
+  const lastUser = userMsgs[userMsgs.length - 1];
+  if (lastUser) {
+    lastUser.classList.add("fade-pop");
+    setTimeout(() => lastUser.classList.remove("fade-pop"), 500);
   }
+
+  userSound.currentTime = 0;
+  userSound.play();
+  userInput.value = "";
+  botResponse(text);
+}
+  
 
   sendBtn.onclick = sendMessage;
   userInput.addEventListener("keypress", e => { if (e.key === "Enter") sendMessage(); });
@@ -192,7 +440,6 @@ document.addEventListener("DOMContentLoaded", () => {
         addMessage(q, "user");
         userSound.play();
         botResponse(q);
-        sendEmailNotification(q);
       };
       quickReplies.appendChild(btn);
     });
@@ -217,6 +464,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadChat();
   loadQuickReplies();
 
+  // === Fungsi untuk membuka chatbot dari luar ===
   window.openYasuiChat = function() {
     chatPopup.classList.add("show");
     chatAppear.play();
