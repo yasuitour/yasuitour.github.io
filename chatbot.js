@@ -1,4 +1,5 @@
-// chatbot.js — Yasui Tour Chatbot Popup
+<script>
+// chatbot.js — Yasui Tour Chatbot Popup + Email Notification (Web3Forms)
 document.addEventListener("DOMContentLoaded", () => {
 
   // ====== Tambahkan CSS ======
@@ -32,14 +33,12 @@ document.addEventListener("DOMContentLoaded", () => {
       animation: fadeBounceIn 1s ease forwards, bubble 2.5s infinite ease-in-out 2s;
     }
 
-    /* Animasi Muncul + Getar */
     @keyframes fadeBounceIn {
       0% { opacity: 0; transform: scale(0.5) translateY(40px); }
       60% { opacity: 1; transform: scale(1.1) translateY(-10px); }
       100% { opacity: 1; transform: scale(1) translateY(0); }
     }
 
-    /* Animasi Gelembung Chat */
     @keyframes bubble {
       0%, 100% { transform: translateY(0) scale(1); }
       50% { transform: translateY(-6px) scale(1.08); }
@@ -47,7 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     .chat-toggle:hover { transform: scale(1.15); transition: 0.2s; }
 
-    /* Popup */
     .chat-popup {
       position: fixed;
       bottom: 90px;
@@ -68,11 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
       backdrop-filter: blur(12px);
     }
 
-    .chat-popup.show {
-      display: flex;
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .chat-popup.show { display: flex; opacity: 1; transform: translateY(0); }
 
     .chat-header {
       background: var(--primary);
@@ -114,8 +108,8 @@ document.addEventListener("DOMContentLoaded", () => {
       animation: fadeSlideIn 0.4s ease forwards;
     }
 
-    .bot { background: var(--bot-bg); color: var(--text-color); align-self: flex-start; border-bottom-left-radius: 4px; }
-    .user { background: var(--user-bg); color: var(--text-color); align-self: flex-end; border-bottom-right-radius: 4px; }
+    .bot { background: var(--bot-bg); align-self: flex-start; border-bottom-left-radius: 4px; }
+    .user { background: var(--user-bg); align-self: flex-end; border-bottom-right-radius: 4px; }
 
     @keyframes fadeSlideIn {
       0% {opacity: 0; transform: translateY(15px);}
@@ -197,9 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
       transition: transform 0.2s ease;
     }
 
-    .chat-input button:active {
-      transform: scale(0.9);
-    }
+    .chat-input button:active { transform: scale(0.9); }
 
     .line-btn {
       background: #06c755;
@@ -229,7 +221,6 @@ document.addEventListener("DOMContentLoaded", () => {
       border-radius: 3px;
     }
 
-/* 🌿 Efek glow dan getar lembut untuk pesan bot */
     @keyframes botShake {
       0%, 100% { transform: translate(0, 0); box-shadow: 0 0 6px rgba(0,255,180,0.3); }
       20% { transform: translate(1px, -1px); box-shadow: 0 0 10px rgba(0,255,180,0.4); }
@@ -237,33 +228,18 @@ document.addEventListener("DOMContentLoaded", () => {
       60% { transform: translate(1px, 1px); box-shadow: 0 0 10px rgba(0,255,180,0.4); }
       80% { transform: translate(-1px, -1px); box-shadow: 0 0 8px rgba(0,255,180,0.3); }
     }
-
     .bot.shake-glow {
       animation: botShake 0.5s ease;
       box-shadow: 0 0 10px rgba(0,255,180,0.5);
       border: 1px solid rgba(0,255,180,0.3);
     }
 
-/* ✨ Animasi lembut muncul untuk pesan user */
-@keyframes userFadePop {
-  0% {
-    opacity: 0;
-    transform: scale(0.8) translateY(10px);
-  }
-  70% {
-    opacity: 1;
-    transform: scale(1.05) translateY(0);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-.user.fade-pop {
-  animation: userFadePop 0.35s ease forwards;
-}
-    
+    @keyframes userFadePop {
+      0% { opacity: 0; transform: scale(0.8) translateY(10px); }
+      70% { opacity: 1; transform: scale(1.05) translateY(0); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .user.fade-pop { animation: userFadePop 0.35s ease forwards; }
   `;
   document.head.appendChild(style);
 
@@ -279,9 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <button id="sendBtn">送信</button>
       </div>
       <div class="clear-btn" id="clearHistory">🗑️ 履歴を削除する</div>
-      <div class="line-btn" onclick="window.open('https://line.me/ti/p/~@wae1030i', '_blank')">
-        📲 LINEでチャット（ID: @wae1030i）
-      </div>
+      <div class="line-btn" onclick="window.open('https://line.me/ti/p/~@wae1030i', '_blank')">📲 LINEでチャット（ID: @wae1030i）</div>
     </div>
     <audio id="botPopSound" src="https://actions.google.com/sounds/v1/cartoon/pop.ogg" preload="auto"></audio>
     <audio id="userSendSound" src="https://actions.google.com/sounds/v1/cartoon/slide_whistle_to_drum_hit.ogg" preload="auto"></audio>
@@ -309,7 +283,6 @@ document.addEventListener("DOMContentLoaded", () => {
   chatAppear.volume = 0.4;
   sendClick.volume = 0.5;
 
-  // 🔊 Mainkan suara + getar saat tombol chat muncul
   setTimeout(() => {
     chatAppear.play();
     if (navigator.vibrate) navigator.vibrate([80, 50, 80]);
@@ -369,7 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (save) saveChat();
   }
 
-function botResponse(userText) {
+  function botResponse(userText) {
     let foundKey = "default";
     for (const key in RESPONSES) {
       if (userText.includes(key)) { foundKey = key; break; }
@@ -379,11 +352,7 @@ function botResponse(userText) {
       addMessage(RESPONSES[foundKey], "bot");
       botPop.currentTime = 0;
       botPop.play();
-
-      // 💬 Getar lembut (HP)
       if (navigator.vibrate) navigator.vibrate([40, 30, 40]);
-
-      // 🌿 Tambahkan animasi shake + glow pada pesan bot terakhir
       const botMsgs = chatBox.querySelectorAll(".msg.bot");
       const lastBot = botMsgs[botMsgs.length - 1];
       if (lastBot) {
@@ -393,81 +362,52 @@ function botResponse(userText) {
     }, 500);
   }
 
+  // ✅ Fungsi kirim pesan user
   function sendMessage() {
-  const text = userInput.value.trim();
-  if (!text) return;
+    const text = userInput.value.trim();
+    if (!text) return;
 
-  // 🎵 Efek suara & animasi tombol kirim
-  sendClick.currentTime = 0;
-  sendClick.play();
-  sendBtn.style.transform = "scale(0.9)";
-  setTimeout(() => (sendBtn.style.transform = "scale(1)"), 150);
+    sendClick.currentTime = 0;
+    sendClick.play();
+    sendBtn.style.transform = "scale(0.9)";
+    setTimeout(() => (sendBtn.style.transform = "scale(1)"), 150);
+    if (navigator.vibrate) navigator.vibrate(70);
 
-  // 📱 Efek getar ringan di HP
-  if (navigator.vibrate) navigator.vibrate(70);
+    addMessage(text, "user");
 
-  // 💬 Tambahkan pesan user ke chatbox
-  addMessage(text, "user");
+    const userMsgs = chatBox.querySelectorAll(".msg.user");
+    const lastUser = userMsgs[userMsgs.length - 1];
+    if (lastUser) {
+      lastUser.classList.add("fade-pop");
+      setTimeout(() => lastUser.classList.remove("fade-pop"), 500);
+    }
 
-  // ✨ Tambahkan animasi fade + scale lembut pada pesan terakhir user
-  const userMsgs = chatBox.querySelectorAll(".msg.user");
-  const lastUser = userMsgs[userMsgs.length - 1];
-  if (lastUser) {
-    lastUser.classList.add("fade-pop");
-    setTimeout(() => lastUser.classList.remove("fade-pop"), 500);
+    userSound.currentTime = 0;
+    userSound.play();
+    userInput.value = "";
+    botResponse(text);
+
+    // 📩 Kirim notifikasi ke email (Web3Forms)
+    sendEmailNotification(text);
   }
 
-  userSound.currentTime = 0;
-  userSound.play();
-  userInput.value = "";
-  botResponse(text);
-}
-  
+  // ✅ Fungsi kirim email notifikasi
+  async function sendEmailNotification(userMessage) {
+    const response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        access_key: "f353e5ae-1b86-4ea6-a55f-582ad8612812",
+        subject: "Pesan Baru dari Chatbot Yasui Tour 💬",
+        from_name: "Yasui Tour Chatbot",
+        message: `Pesan baru dari pengunjung:\n\n${userMessage}`
+      })
+    });
+    const result = await response.json();
+    console.log("Notifikasi email:", result);
+  }
 
   sendBtn.onclick = sendMessage;
   userInput.addEventListener("keypress", e => { if (e.key === "Enter") sendMessage(); });
 
-  chatToggle.onclick = () => chatPopup.classList.toggle("show");
-  closeChat.onclick = () => chatPopup.classList.remove("show");
-
-  function loadQuickReplies() {
-    quickReplies.innerHTML = "";
-    QUICK_OPTIONS.forEach(q => {
-      const btn = document.createElement("button");
-      btn.classList.add("quick-btn");
-      btn.textContent = q;
-      btn.onclick = () => {
-        addMessage(q, "user");
-        userSound.play();
-        botResponse(q);
-      };
-      quickReplies.appendChild(btn);
-    });
-  }
-
-  function saveChat() { localStorage.setItem("yasui_chat", chatBox.innerHTML); }
-  function loadChat() {
-    const saved = localStorage.getItem("yasui_chat");
-    if (saved) chatBox.innerHTML = saved;
-    else addMessage("こんにちは！ヤスイツアーです🌴 ご質問は日本語でどうぞ。", "bot", false);
-  }
-  function clearChat() {
-    if (confirm("チャット履歴を削除しますか？")) {
-      localStorage.removeItem("yasui_chat");
-      chatBox.innerHTML = "";
-      lastDate = "";
-      addMessage("こんにちは！ヤスイツアーです🌴 ご質問は日本語でどうぞ。", "bot", false);
-    }
-  }
-  clearBtn.onclick = clearChat;
-
-  loadChat();
-  loadQuickReplies();
-
-  // === Fungsi untuk membuka chatbot dari luar ===
-  window.openYasuiChat = function() {
-    chatPopup.classList.add("show");
-    chatAppear.play();
-    if (navigator.vibrate) navigator.vibrate(50);
-  };
-});
+  chatToggle.onclick = ()
