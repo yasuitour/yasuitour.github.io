@@ -1,64 +1,281 @@
-<!-- 🌸 Font Awesome -->
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-/>
-
-<!-- 🌸 Agar responsive di smartphone -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<style>
-/* 💙 Background biru lembut */
-body {
-  background: linear-gradient(135deg, #d0e7ff, #e3f2fd);
-  font-family: "Noto Sans JP", sans-serif;
-  color: #333;
-  margin: 0;
-  padding: 0;
+/* 🌸 Animasi lembut */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* 🌸 Tombol kembali ke halaman utama */
-.back-home {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: linear-gradient(90deg, #42a5f5, #64b5f6);
-  color: white;
-  text-decoration: none;
-  padding: 8px 14px; /* 🔹 Tombol lebih pendek */
-  border-radius: 40px;
-  font-weight: bold;
-  margin: 15px;
-  transition: 0.3s;
-  box-shadow: 0 3px 8px rgba(66, 165, 245, 0.3);
-  font-size: 0.95rem;
-  max-width: fit-content;
-}
-
-.back-home:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(66, 165, 245, 0.4);
-}
-
-/* 🌸 Container Utama */
-.yasui-reservasi-container {
+/* 🌸 Label */
+.yasui-reservasi-form label {
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 50px 20px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #444;
+  margin-top: 15px;
+  gap: 8px;
 }
 
-/* 🌸 Form Styling */
-.yasui-reservasi-form {
+/* 🌸 Input & Textarea */
+.yasui-reservasi-form input,
+.yasui-reservasi-form textarea {
   width: 100%;
-  max-width: 550px;
-  background: #ffffff;
-  padding: 35px 30px;
-  border-radius: 20px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  animation: fadeIn 0.8s ease;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: 0.3s;
   box-sizing: border-box;
 }
 
-/* 🌸 Animasi lembut */
-@keyfr
+/* 🌸 Fokus */
+.yasui-reservasi-form input:focus,
+.yasui-reservasi-form textarea:focus {
+  outline: none;
+  border-color: #42a5f5;
+  box-shadow: 0 0 6px rgba(66, 165, 245, 0.4);
+}
+
+/* 🌸 Tombol Submit */
+.yasui-reservasi-form button {
+  width: 100%;
+  margin-top: 25px;
+  padding: 12px;
+  font-size: 1.1rem;
+  background: linear-gradient(90deg, #42a5f5, #64b5f6);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.yasui-reservasi-form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(66, 165, 245, 0.4);
+}
+
+/* 🌸 Tambahan tombol tambah tanggal */
+.add-date-btn {
+  display: inline-block;
+  background: #64b5f6;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 8px;
+  font-size: 0.9rem;
+}
+.add-date-btn:hover {
+  background: #42a5f5;
+}
+
+/* 🌸 Gender section */
+#gender-section input {
+  width: 45px;
+  text-align: center;
+}
+</style>
+
+<!-- 🏠 Tombol kembali ke halaman utama -->
+<a href="index.html" class="back-home"><i class="fa-solid fa-house"></i> ホームページに戻る</a>
+
+<center>
+  <div class="mt-6">
+    <h1 class="text-4xl font-bold mb-4 text-center">ヤスイツアー</h1>
+    <h2 class="text-3xl font-bold mb-4 text-center">📝 予約する</h2>
+    <p class="text-lg mb-4 text-center">ご希望のサービスを簡単に予約できます。</p>
+  </div>
+</center>
+
+<!-- 🌸 Form Reservasi -->
+<div class="yasui-reservasi-container">
+  <form
+    action="https://api.web3forms.com/submit"
+    method="POST"
+    class="yasui-reservasi-form"
+  >
+    <h2>予約フォーム</h2>
+
+    
+<input type="hidden" name="access_key" value="3ce67fc7-dd7f-4010-82b6-5d2f558933c9" />
+<input type="hidden" name="subject" value="Reservasi Baru dari ヤスイツアー Website" />
+
+<label for="name">お名前</label>
+<input type="text" id="name" name="name" placeholder="例：タナカ" required />
+
+<label for="email">メールアドレス</label>
+<input type="email" id="email" name="email" placeholder="例：example@mail.com" required />
+
+<label for="date">ご希望の日付</label>
+<div class="date-group">
+  <input type="date" id="date" name="date" required />
+  <select name="plan[]" required>
+    <option value="">選択してください</option>
+    <option value="カーチャーター">カーチャーター</option>
+    <option value="スパエステ">スパエステ</option>
+    <option value="ラフティング">ラフティング</option>
+    <option value="パッケージツアー">パッケージツアー</option>
+    <option value="別に">別に</option>
+  </select>
+</div>
+
+<!-- 🔹 Tambahan tempat untuk tanggal ekstra -->
+<div id="extra-dates"></div>
+<button type="button" class="add-date-btn" id="addDateBtn">＋日付を追加</button>
+
+<label for="people">人数</label>
+<input type="number" id="people" name="people" min="1" placeholder="例：2" required />
+
+<!-- 🔹 Bagian jumlah pria dan wanita -->
+<div id="gender-section" style="display: none;">
+  <legend>男女の人数</legend>
+  <div style="display: flex; gap: 10px; align-items: center;">
+    <label for="male_count">男性：</label>
+    <input type="number" id="male_count" name="male_count" min="0" value="0" />
+  </div>
+  <div style="display: flex; gap: 10px; align-items: center;">
+    <label for="female_count">女性：</label>
+    <input type="number" id="female_count" name="female_count" min="0" value="0" />
+  </div>
+  <p id="gender_total" style="margin-top: 8px; font-weight: bold;"></p>
+</div>
+
+<label for="message">メッセージ</label>
+<textarea id="message" name="message" placeholder="ツアーの詳細やリクエストなど..." required></textarea>
+
+<button type="submit">予約を送信する</button>
+<p id="result"></p>
+</form>
+</div>
+
+<script>
+const peopleInput = document.getElementById("people");
+const genderSection = document.getElementById("gender-section");
+const maleInput = document.getElementById("male_count");
+const femaleInput = document.getElementById("female_count");
+const genderTotal = document.getElementById("gender_total");
+
+peopleInput.addEventListener("input", () => {
+  if (peopleInput.value > 0) {
+    genderSection.style.display = "block";
+  } else {
+    genderSection.style.display = "none";
+    maleInput.value = 0;
+    femaleInput.value = 0;
+    genderTotal.textContent = "";
+  }
+});
+
+function updateTotal() {
+  const total = Number(maleInput.value) + Number(femaleInput.value);
+  genderTotal.textContent = total ? `合計人数：${total}人` : "";
+}
+maleInput.addEventListener("input", updateTotal);
+femaleInput.addEventListener("input", updateTotal);
+
+// 🔹 Tambah tanggal tambahan + pilihan plan + tombol hapus
+const addDateBtn = document.getElementById("addDateBtn");
+const extraDatesContainer = document.getElementById("extra-dates");
+
+addDateBtn.addEventListener("click", () => {
+  const wrapper = document.createElement("div");
+  wrapper.className = "date-group";
+  wrapper.style.marginTop = "8px";
+  wrapper.style.display = "flex";
+  wrapper.style.gap = "8px";
+  wrapper.style.alignItems = "center";
+  wrapper.style.flexWrap = "wrap";
+
+  const newDateInput = document.createElement("input");
+  newDateInput.type = "date";
+  newDateInput.name = "additional_date[]";
+  newDateInput.required = true;
+  newDateInput.style.flex = "1 1 150px";
+
+  const newSelect = document.createElement("select");
+  newSelect.name = "plan[]";
+  newSelect.required = true;
+  newSelect.innerHTML = `
+    <option value="">選択してください</option>
+    <option value="カーチャーター">カーチャーター</option>
+    <option value="スパエステ">スパエステ</option>
+    <option value="ラフティング">ラフティング</option>
+    <option value="パッケージツアー">パッケージツアー</option>
+    <option value="別に">別に</option>
+  `;
+  newSelect.style.flex = "1 1 150px";
+
+  const removeBtn = document.createElement("button");
+  removeBtn.type = "button";
+  removeBtn.textContent = "削除";
+  removeBtn.style.backgroundColor = "#f44336";
+  removeBtn.style.color = "white";
+  removeBtn.style.border = "none";
+  removeBtn.style.padding = "6px 12px";
+  removeBtn.style.borderRadius = "6px";
+  removeBtn.style.cursor = "pointer";
+
+  removeBtn.addEventListener("click", () => {
+    wrapper.remove();
+  });
+
+  wrapper.appendChild(newDateInput);
+  wrapper.appendChild(newSelect);
+  wrapper.appendChild(removeBtn);
+  extraDatesContainer.appendChild(wrapper);
+});
+</script>
+
+<style>
+.date-group select,
+.date-group input[type="date"] {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+.add-date-btn {
+  margin-top: 8px;
+  background-color: #008CBA;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.add-date-btn:hover {
+  background-color: #0076a3;
+}
+</style>
+    
+    
+    
+    
+    
+    
+<script>
+const form = document.querySelector(".yasui-reservasi-form");
+const result = document.getElementById("result");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  result.innerHTML = "⏳ 送信中...";
+  const formData = new FormData(form);
+  const response = await fetch(form.action, {
+    method: form.method,
+    body: formData,
+    headers: { Accept: "application/json" },
+  });
+
+  if (response.ok) {
+    result.innerHTML = "✅ 予約が送信されました。ありがとうございます！";
+    form.reset();
+    document.getElementById("extra-dates").innerHTML = "";
+  } else {
+    result.innerHTML = "❌ エラーが発生しました。もう一度お試しください。";
+  }
+});
+</script>
+
+<script src="chatbot.js"></script>
