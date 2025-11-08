@@ -1,3 +1,65 @@
+<!-- 🌸 Font Awesome -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+
+<!-- 🌸 Agar responsive di smartphone -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<style>
+/* 💙 Background biru lembut */
+body {
+  background: linear-gradient(135deg, #d0e7ff, #e3f2fd);
+  font-family: "Noto Sans JP", sans-serif;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+/* 🌸 Tombol kembali ke halaman utama */
+.back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(90deg, #42a5f5, #64b5f6);
+  color: white;
+  text-decoration: none;
+  padding: 8px 14px; /* 🔹 Tombol lebih pendek */
+  border-radius: 40px;
+  font-weight: bold;
+  margin: 15px;
+  transition: 0.3s;
+  box-shadow: 0 3px 8px rgba(66, 165, 245, 0.3);
+  font-size: 0.95rem;
+  max-width: fit-content;
+}
+
+.back-home:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(66, 165, 245, 0.4);
+}
+
+/* 🌸 Container Utama */
+.yasui-reservasi-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 20px;
+}
+
+/* 🌸 Form Styling */
+.yasui-reservasi-form {
+  width: 100%;
+  max-width: 550px;
+  background: #ffffff;
+  padding: 35px 30px;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.8s ease;
+  box-sizing: border-box;
+}
+
 /* 🌸 Animasi lembut */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
@@ -99,6 +161,7 @@
     <h2>予約フォーム</h2>
 
     
+
 <input type="hidden" name="access_key" value="3ce67fc7-dd7f-4010-82b6-5d2f558933c9" />
 <input type="hidden" name="subject" value="Reservasi Baru dari ヤスイツアー Website" />
 
@@ -248,12 +311,11 @@ addDateBtn.addEventListener("click", () => {
   background-color: #0076a3;
 }
 </style>
+
+
     
     
-    
-    
-    
-    
+
 <script>
 const form = document.querySelector(".yasui-reservasi-form");
 const result = document.getElementById("result");
