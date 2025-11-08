@@ -423,16 +423,17 @@ inputContainer.appendChild(toggleQuickBtn);
   function loadChat(){
     const saved = localStorage.getItem("yasui_chat");
     if (saved) chatBox.innerHTML = saved;
-    else addMessage("こんにちは！ヤスイツアーです🌴 ご質問は日本語でどうぞ。", "bot", false);
+    else addMessage("こんにちは！ヤスイツアーです🌴 ご質問は日本語でどうぞ ！。"
+                    "このチャットを始める前に、お手数ですがお名前とメールアドレスをフォームにご入力ください。"
+"今後のサービス対応をスムーズに行うために必要となります。"
+"なお、フォームの入力は任意ですので、空欄のままでもご利用いただけます。", "bot", false);
   }
   function clearChat(){
     if (confirm("チャット履歴を削除しますか？")){
       localStorage.removeItem("yasui_chat");
       chatBox.innerHTML = "";
       lastDate = "";
-      addMessage("こんにちは！ヤスイツアーです🌴 ご質問は日本語でどうぞ！。このチャットを始める前に、お手数ですがお名前とメールアドレスをフォームにご入力ください。
-"今後のサービス対応をスムーズに行うために必要となります。"
-"なお、フォームの入力は任意ですので、空欄のままでもご利用いただけます。", "bot", false);
+      addMessage("こんにちは！ヤスイツアーです🌴 ご質問は日本語でどうぞ！。", "bot", false);
     }
   }
 
