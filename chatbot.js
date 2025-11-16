@@ -267,14 +267,24 @@ function introduceTypo(text) {
 // Fungsi untuk menampilkan efek mengetik
 function typeWriterEffect(element, text, speed = 5) {
   let i = 0;
+
+  // Simpan timestamp
+  const timestamp = element.querySelector(".timestamp");
+
   element.textContent = '';
+
   const typing = setInterval(() => {
     if (i < text.length) {
       element.textContent += text.charAt(i);
       i++;
-      element.scrollTop = element.scrollHeight;
     } else {
       clearInterval(typing);
+
+      // RETURN timestamp to the element
+      if (timestamp) element.appendChild(timestamp);
+
+      // <-- FIX: simpan chat setelah bot selesai mengetik
+      saveChat();
     }
   }, speed);
 }
