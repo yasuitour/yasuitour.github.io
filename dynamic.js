@@ -1,4 +1,3 @@
-// js/dynamic.js
 document.addEventListener("DOMContentLoaded", () => {
   // animasi tombol
   document.querySelectorAll(".fancy-btn").forEach((btn, index) => {
@@ -42,4 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
       contentArea.innerHTML = `<p class="text-red-400 mt-4">⚠️ ページの読み込みに失敗しました。</p>`;
     }
   }
+
+  // Load car.html content on initial page load (below the buttons)
+  loadContent("car");
 });
